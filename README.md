@@ -12,7 +12,7 @@ The architecture isolates each service stack in its own directory, using a centr
 
 <table>
   <tr>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Beszel</strong><br>
       <a href="./beszel"><code>./beszel</code></a> &bull; Port <code>8090</code>
       <hr>
@@ -20,7 +20,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>beszel</code>, <code>beszel-agent</code></small>
     </td>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Dockhand</strong><br>
       <a href="./dockhand"><code>./dockhand</code></a> &bull; Port <code>7070</code>
       <hr>
@@ -28,7 +28,9 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>dockhand</code></small>
     </td>
-    <td width="33%" valign="top">
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
       <strong>Uptime Kuma</strong><br>
       <a href="./uptimekuma"><code>./uptimekuma</code></a> &bull; Port <code>3001</code>
       <hr>
@@ -36,21 +38,13 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>uptime-kuma</code>, <code>autokuma</code></small>
     </td>
-  </tr>
-  <tr>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Webmin</strong><br>
       <a href="./webmin"><code>./webmin</code></a> &bull; <em>Host-level</em>
       <hr>
       Theme overrides and custom stylesheets for Webmin.
       <br><br>
       <small>Custom <code>style.css</code> theme</small>
-    </td>
-    <td width="33%" valign="top">
-      <!-- Empty Spacer Card -->
-    </td>
-    <td width="33%" valign="top">
-      <!-- Empty Spacer Card -->
     </td>
   </tr>
 </table>
@@ -59,7 +53,7 @@ The architecture isolates each service stack in its own directory, using a centr
 
 <table>
   <tr>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Nextcloud</strong><br>
       <a href="./nextcloud"><code>./nextcloud</code></a> &bull; Port <code>8080</code>
       <hr>
@@ -67,7 +61,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>all-in-one</code> (AIO)</small>
     </td>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>AFFiNE</strong><br>
       <a href="./affine"><code>./affine</code></a> &bull; Port <code>3010</code>
       <hr>
@@ -75,7 +69,9 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>affine-stable</code>, <code>redis</code>, <code>pgvector</code></small>
     </td>
-    <td width="33%" valign="top">
+  </tr>
+  <tr>
+    <td colspan="2" valign="top">
       <strong>BentoPDF</strong><br>
       <a href="./bentopdf"><code>./bentopdf</code></a> &bull; Port <code>3090</code>
       <hr>
@@ -90,7 +86,7 @@ The architecture isolates each service stack in its own directory, using a centr
 
 <table>
   <tr>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Vaultwarden</strong><br>
       <a href="./vaultwarden"><code>./vaultwarden</code></a> &bull; Port <code>8070</code>
       <hr>
@@ -98,7 +94,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>vaultwarden/server</code></small>
     </td>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Hemmelig</strong><br>
       <a href="./hemmelig"><code>./hemmelig</code></a> &bull; Port <code>3050</code>
       <hr>
@@ -106,7 +102,9 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>hemmelig:v7</code></small>
     </td>
-    <td width="33%" valign="top">
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
       <strong>Karakeep</strong><br>
       <a href="./karakeep"><code>./karakeep</code></a> &bull; Port <code>3030</code>
       <hr>
@@ -114,21 +112,13 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small><code>karakeep</code>, <code>alpine-chrome</code>, <code>meilisearch</code></small>
     </td>
-  </tr>
-  <tr>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Mazanoke</strong><br>
       <a href="./mazanoke"><code>./mazanoke</code></a> &bull; Port <code>3474</code>
       <hr>
       Client-side, privacy-focused image optimizer.
       <br><br>
       <small><code>mazanoke</code></small>
-    </td>
-    <td width="33%" valign="top">
-      <!-- Empty Spacer Card -->
-    </td>
-    <td width="33%" valign="top">
-      <!-- Empty Spacer Card -->
     </td>
   </tr>
 </table>
@@ -137,7 +127,7 @@ The architecture isolates each service stack in its own directory, using a centr
 
 <table>
   <tr>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Theatre</strong><br>
       <a href="./theatre"><code>./theatre</code></a> &bull; <em>Multi-port</em>
       <hr>
@@ -145,16 +135,13 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
       <small>Jellyfin, Seerr, Radarr, Sonarr, Bazarr, Prowlarr, qBittorrent, Gluetun</small>
     </td>
-    <td width="33%" valign="top">
+    <td width="50%" valign="top">
       <strong>Immich</strong><br>
       <a href="./immich"><code>./immich</code></a> &bull; Port <code>2283</code>
       <hr>
       High-performance self-hosted photo/video backup system.
       <br><br>
       <small><code>immich-server</code>, <code>immich-machine-learning</code>, <code>valkey</code>, <code>pgvecto-rs</code></small>
-    </td>
-    <td width="33%" valign="top">
-      <!-- Empty Spacer Card -->
     </td>
   </tr>
 </table>
@@ -163,19 +150,13 @@ The architecture isolates each service stack in its own directory, using a centr
 
 <table>
   <tr>
-    <td width="33%" valign="top">
+    <td width="100%" valign="top">
       <strong>Backblaze</strong><br>
       <a href="./backblaze"><code>./backblaze</code></a> &bull; <em>Backup</em>
       <hr>
       Encrypted remote backups to Backblaze B2 using Restic.
       <br><br>
       <small><code>restic-backup-docker</code></small>
-    </td>
-    <td width="33%" valign="top">
-      <!-- Empty Spacer Card -->
-    </td>
-    <td width="33%" valign="top">
-      <!-- Empty Spacer Card -->
     </td>
   </tr>
 </table>
