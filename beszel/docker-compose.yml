@@ -1,0 +1,40 @@
+services:
+  beszel:
+    image: henrygd/beszel:latest
+    container_name: beszel
+    restart: unless-stopped
+    environment:
+      APP_URL: ${HUB_URL}   # replace with Netbird IP of your server
+      CHECK_UPDATES: "true"
+    ports:
+      - 8090:8090
+    volumes:
+      - ./data/beszel_data:/beszel_data
+      - ./data/beszel_socket:/beszel_socket
+
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host          # required for real network interface stats
+    volumes:
+      - ./data/beszel_agent_data:/var/lib/beszel-agent
+      - ./data/beszel_socket:/beszel_socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # AMD iGPU sysfs access (for GPU monitoring)
+      - /sys/class/drm:/sys/class/drm:ro
+      - /sys/bus/pci/drivers:/sys/bus/pci/drivers:ro
+    environment:
+      LISTEN: 45876
+      HUB_URL: ${HUB_URL}
+      TOKEN: ${TOKEN}          # fill in after first boot — see setup steps below
+      KEY: ${KEY}       # fill in after first boot — see setup steps below
+      GPU_COLLECTOR: amd_sysfs  # AMD iGPU via sysfs, no ROCm needed
+      # Uncomment if you want to monitor your SSD specifically:
+      # FILESYSTEM: /dev/sda
+      # SMART_DEVICES: /dev/sda:sat
+      # Uncomment to filter noisy sensors (e.g. keep only CPU/GPU temps):
+      # SENSORS: k10temp*,amdgpu*
+      # Uncomment to watch specific systemd services:
+      # SERVICE_PATTERNS: "docker*,netbird*"
+

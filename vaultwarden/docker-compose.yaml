@@ -1,0 +1,40 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    user: "1000:1000"
+    environment:
+      - DOMAIN=https://lighthouse-vaultwarden.eu1.netbird.services
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - SIGNUPS_ALLOWED=false
+      - SIGNUPS_VERIFY=true
+      - SHOW_PASSWORD_HINT=false
+      - LOGIN_RATELIMIT_SECONDS=60
+      - LOGIN_RATELIMIT_MAX_BURST=10
+      - ADMIN_RATELIMIT_SECONDS=300
+      - ADMIN_RATELIMIT_MAX_BURST=3
+      - EXTENDED_LOGGING=true
+      - LOG_LEVEL=info
+      - LOG_FILE=./data/logs/vaultwarden.log
+    volumes:
+      - ./data/:/data/
+    ports:
+      - 8070:80
+    networks:
+      - uptime-kuma-external
+    labels:
+      kuma.vaultwarden-group.group.name: "Vaultwarden"
+      kuma.vaultwarden_http.http.name: "Vaultwarden - HTTP"
+      kuma.vaultwarden_http.http.url: "http://vaultwarden:80/alive"
+      kuma.vaultwarden_http.http.parent_name: "vaultwarden-group"
+      kuma.vaultwarden_docker.docker.name: "Vaultwarden - Container"
+      kuma.vaultwarden_docker.docker.docker_container: "vaultwarden"
+      kuma.vaultwarden_docker.docker.docker_host: "1"
+      kuma.vaultwarden_docker.docker.parent_name: "vaultwarden-group"
+
+networks:
+  uptime-kuma-external:
+    external: true
+
+# Run $ sudo chown -R 1000:1000 ~/services/vaultwarden/data

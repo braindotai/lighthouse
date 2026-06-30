@@ -1,0 +1,24 @@
+name: bentopdf
+
+services:
+  bentopdf:
+    image: ghcr.io/alam00000/bentopdf-simple:latest
+    container_name: bentopdf
+    ports:
+      - '3090:8080'
+    restart: unless-stopped
+    networks:
+      - uptime-kuma-external
+    labels:
+      kuma.bentopdf-group.group.name: "BentoPDF"
+      kuma.bentopdf_http.http.name: "BentoPDF - HTTP"
+      kuma.bentopdf_http.http.url: "http://bentopdf:8080"
+      kuma.bentopdf_http.http.parent_name: "bentopdf-group"
+      kuma.bentopdf_docker.docker.name: "BentoPDF - Container"
+      kuma.bentopdf_docker.docker.docker_container: "bentopdf"
+      kuma.bentopdf_docker.docker.docker_host: "1"
+      kuma.bentopdf_docker.docker.parent_name: "bentopdf-group"
+
+networks:
+  uptime-kuma-external:
+    external: true

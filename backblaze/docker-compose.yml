@@ -1,0 +1,28 @@
+name: 'Backblaze'
+
+services:
+  backblaze:
+    image: ghcr.io/lobaro/restic-backup-docker:latest
+    container_name: backblaze
+    hostname: ${HOSTNAME} # This name will show up in your snapshot records
+    restart: always
+    privileged: true
+    env_file:
+      - .env
+    volumes:
+      # Map the specific folder you want to backup here:
+      # Format: /path/on/your/fedora/server:/data/name_of_folder:ro
+      - ../affine/data:/data/affine:ro
+      - ../bentopdf/data:/data/bentopdf:ro
+      - ../beszel/data:/data/beszel:ro
+      - ../dockhand/data:/data/dockhand:ro
+      - ../hemmelig/data:/data/hemmelig:ro
+      - ../immich/data:/data/immich:ro
+      - ../karakeep/data:/data/karakeep:ro
+      - ../mazanoke/data:/data/mazanoke:ro
+      - ../nextcloud/data:/data/nextcloud:ro
+      - ../snapotter/data:/data/snapotter:ro
+      - ../uptimekuma/data:/data/uptimekuma:ro
+      - ../vaultwarden/data:/data/vaultwarden:ro
+      - ../webmin/data:/data/webmin:ro
+      - ../backblaze/hooks:/hooks:ro

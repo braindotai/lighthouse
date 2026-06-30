@@ -1,0 +1,24 @@
+name: mazanoke
+
+services:
+  mazanoke:
+    container_name: mazanoke
+    image: ghcr.io/civilblur/mazanoke:latest
+    ports:
+      - "3474:80"
+    restart: unless-stopped
+    networks:
+      - uptime-kuma-external
+    labels:
+      kuma.mazanoke-group.group.name: "Mazanoke"
+      kuma.mazanoke_http.http.name: "Mazanoke - HTTP"
+      kuma.mazanoke_http.http.url: "http://mazanoke:80"
+      kuma.mazanoke_http.http.parent_name: "mazanoke-group"
+      kuma.mazanoke_docker.docker.name: "Mazanoke - Container"
+      kuma.mazanoke_docker.docker.docker_container: "mazanoke"
+      kuma.mazanoke_docker.docker.docker_host: "1"
+      kuma.mazanoke_docker.docker.parent_name: "mazanoke-group"
+
+networks:
+  uptime-kuma-external:
+    external: true

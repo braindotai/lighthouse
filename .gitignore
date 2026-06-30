@@ -1,0 +1,5 @@
+*data*
+*.env*
+*.conf*
+*.bak*
+.history

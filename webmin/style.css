@@ -1,0 +1,360 @@
+/* Load a Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+
+/* =====================
+   BASE TYPOGRAPHY
+   ===================== */
+body, html {
+    font-family: 'Google Sans', sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+}
+
+/* =====================
+   HEADINGS
+   ===================== */
+h1, h2, h3, h4 {
+    font-family: 'Google Sans', sans-serif !important;
+    margin-bottom: 14px !important;
+}h3 { font-size: 1.3rem !important; }
+h4 { font-size: 1.15rem !important; }
+
+/* =====================
+   SIDEBAR
+   ===================== */
+#sidebar, .navigation {
+    background-color: #212121 !important;
+}
+
+html[data-theme=gunmetal] #sidebar .switch-mins input:checked + label {
+    background-color: #212121 !important;
+}
+
+html[data-bgs=nightRider] .switch-mins label {
+    opacity: 1 !important;
+}
+
+html body #right-side-tabs {
+    margin-top: 0 !important;
+    min-height: 100vh;
+}
+
+html[data-slider-fixed="1"] #right-side-tabs {
+    margin-right: 0 !important;
+}
+
+/* Sidebar sub-menu items */
+#sidebar ul.sub > li:not(.menu-container) a {
+    font-size: 14px !important;
+}
+#sidebar ul.sub > li:not(.menu-container) {
+    min-height: 30px !important;
+}
+
+/* Hide Webmin logo icon in sidebar */
+.fa.fa-stack.fa-dashboard,
+.wbm-webmin.wbm-sm {
+    display: none !important;
+}
+
+/* =====================
+   ACCENT / LINKS
+   ===================== */
+a, .text-info {
+    color: #e94560 !important;
+}
+
+/* =====================
+   LAYOUT & CONTENT AREA
+   ===================== */
+.container-fluid, .panel-body, .tab-content {
+    padding: 16px !important;
+}
+
+/* =====================
+   PANELS / WELLS
+   ===================== */
+.panel, .well {
+    margin-bottom: 22px !important;
+    padding: 16px !important;
+}
+
+/* Dashboard panel spacing */
+html body.dashboard #content .container-fluid .panel:has(+ .panel-group),
+html body.dashboard #content .container-fluid .panel:has(+ .panel),
+html body.dashboard #content .container-fluid .panel + .panel {
+    margin-bottom: 16px !important;
+    padding-left: 0.5rem !important;
+    padding-top: 0.8rem !important;
+}
+
+/* Panel heading title */
+.panel .panel-heading .panel-title a {
+    margin-left: 10px !important;
+    font-weight: bold;
+}
+
+/* =====================
+   TABLES
+   ===================== */
+table td, table th {
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+}
+
+/* Dashboard & sysinfo table padding overrides */
+#right-side-tabs .info-container table tbody td,
+#content #extended_sysinfo-1 table td {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+}
+
+#right-side-tabs .info-container table thead th,
+#right-side-tabs .info-container table tbody td:not(:has(i)),
+#content #extended_sysinfo-1 table th,
+#content #extended_sysinfo-1 table td {
+    padding-left: 8px !important;
+}
+
+/* Night Rider theme table padding */
+html[data-bgs=nightRider] .ui_table thead > tr > th,
+html[data-bgs=nightRider] .ui_table tbody > tr > th,
+html[data-bgs=nightRider] .ui_table tfoot > tr > th,
+html[data-bgs=nightRider] .ui_table thead > tr > td,
+html[data-bgs=nightRider] .ui_table tbody > tr > td,
+html[data-bgs=nightRider] .ui_table tfoot > tr > td,
+html[data-bgs=nightRider] .table > thead > tr > th,
+html[data-bgs=nightRider] .table > tbody > tr > th,
+html[data-bgs=nightRider] .table > tfoot > tr > th,
+html[data-bgs=nightRider] .table > thead > tr > td,
+html[data-bgs=nightRider] .table > tbody > tr > td,
+html[data-bgs=nightRider] .table > tfoot > tr > td {
+    padding: 0.5rem 0 !important;
+}
+
+/* =====================
+   FORM FIELDS
+   (excludes search bar — see below)
+   ===================== */
+select, textarea {
+    font-size: 14px !important;
+    padding: 7px 10px !important;
+}
+
+/* Regular inputs but NOT the sidebar search */
+input:not(.sidebar-search) {
+    font-size: 14px !important;
+    padding: 7px 10px !important;
+}
+
+/* =====================
+   SEARCH BAR FIX
+   The sidebar search has a FA icon inside it and needs
+   its own padding so the icon doesn't overlap the text.
+   ===================== */
+#webmin_search_form .sidebar-search {
+    font-size: 14px !important;
+    padding: 17px 10px 16px 30px !important;
+    height: auto !important;
+    line-height: 1 !important;
+}
+
+#sidebar ul.navigation:has([class*=new-layout]) .search-form-container input+.fa {
+    margin-left: 20px !important;
+    margin-top: -25px;
+    font-size: 100%  !important;
+}
+
+/* =====================
+   NAV & LIST ITEMS
+   ===================== */
+.list-group-item, .nav > li > a {
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+}
+
+/* =====================
+   RIGHT SIDE PANEL / FAVORITES
+   ===================== */
+#right-side-tabs .right_pane_favorites_num {
+    display: none;
+}
+
+#right-side-tabs .right_pane_favorites_link {
+    font-size: unset !important;
+    padding: 6px !important;
+    border-bottom: 1px solid transparent;
+}
+
+#right-side-tabs #right-side-tabs-favorites.active + div + .right-side-tabs-dismiss i.fa-cog,
+#right-side-tabs #right-side-tabs-favorites.active + div + .right-side-tabs-dismiss i.fa-star-o {
+    font-size: 1.5rem !important;
+}
+
+.right-side-tabs[data-bgs=nav] .graph-container > .graph .description {
+    line-height: 1.0;
+}
+
+.right-side-tabs .tab-pane .info-container .extended-list-data .panel-default {
+    display: none;
+}
+
+/* =====================
+   BUTTONS
+   ===================== */
+.btn.btn-info.btn-xxs.f__lnk_t_btn-el.vertical-align-top.---forced,
+html[data-bgs=nightRider] tr:not(:hover) .f__lnk_t_btn-el:not(.btn-dnwo) {
+    padding: 0.7rem !important;
+}
+
+/* =====================
+   MISC
+   ===================== */
+html body:not(.dashboard) #content .panel-loading .row #headln2c > .favorites,
+html body:not(.dashboard) #content .panel .row #headln2c > .favorites {
+    font-size: 1.6rem !important;
+}
+
+.switch-mins label i.fa-dashboard + span,
+.switch-mins label i + span {
+    margin-top: 0 !important;
+}
+
+.mCustomScrollBox.mCS-minimal.mCSB_vertical.mCSB_outside {
+    background-color: transparent !important;
+}
+
+/* Fix button shrink on hover */
+html[data-bgs=nightRider] tr:hover .f__lnk_t_btn-el:not(.btn-dnwo) {
+    padding: 0.7rem !important;
+    margin-top: 0 !important;
+}
+
+
+tr.tr_tag.ui_checked_columns>td[data-td-e]>.awcheckbox:first-child {
+    margin-left: 0.6rem !important
+}
+
+#content table.dataTable>tbody>tr>td {
+    padding-right: 12px!important;
+    padding-left: 0.5rem !important;
+}
+
+#content table.dataTable>thead>tr>th {
+    white-space: nowrap;
+    padding: 4px 24px 6px 0.5rem!important;
+}
+
+#content table.dataTable>thead>tr>th:first-child {
+    padding-left: 0.5rem !important;
+}
+
+#content .ui_checked_checkbox.flexed>div.flex-wrapper span, #content .ui_checked_checkbox.flexed>div.flex-wrapper, #content .ui_checked_checkbox.flexed {
+    padding: 0.2rem !important;
+}
+
+html body .ui_link.btn.btn-inverse.btn-tiny.ui_link_replaced:not(.btn-success):not(.btn-warning):not(.btn-danger):not(.btn-primary):not(.btn-info):not(.btn-default), html body .btn-tiny:not(.btn-success):not(.btn-warning):not(.btn-danger):not(.btn-primary):not(.btn-info):not(.btn-default) {
+    padding: 1rem !important;
+    font-size: 1rem !important;
+}
+
+.btn-group.ui_links_row>.ui_link.ui_link_replaced:not(.select_all):not(.select_invert) {
+    margin-right: 0;
+    padding: 1rem !important;
+    font-size: 1rem !important;
+}
+
+html body #content .container-fluid-loading .panel, html body #content .container-fluid .panel {
+    padding-left: 0.5rem !important;
+}
+
+body[layout-column="1"] #content .container-fluid [data-tbody-type=ui-table] [data-row-type=ui-table] {
+    display: block;
+    background-color: transparent;
+    padding: 5px 5px 5px 0.8rem;
+}
+
+html[data-bgs=nightRider] #content select#CSFlognum:not([data-encoding]):not([data-no-appearance]):not([multiple]), html[data-bgs=nightRider] #content select.ui_select:not([data-encoding]):not([data-no-appearance]):not([multiple]), html[data-bgs=nightRider] #content select:not([data-encoding]):not([data-no-appearance]):not([multiple]) {
+    background-position: calc(100% - 8px) calc(100% - 8px)!important;
+}
+
+
+-------------
+
+html[data-bgs=nightRider] input:not(.popover-path-input):not([type=submit]):not([type=time]):not([type=checkbox]):not([type=radio]):not(.session_login):not(.select2-search__field):not([data-command=true]):not(.dataTable-mirror):not(.sidebar-search):not(.form-control-rea), html[data-bgs=nightRider] textarea:not([disabled]), html[data-bgs=nightRider] textarea.form-control:not([disabled]), html[data-bgs=nightRider] select:not([disabled]), html[data-bgs=nightRider] input.form-control:not(.sidebar-search):not([disabled]) {
+    padding-right: 2rem !important;
+}
+
+select.ui_select:not(.heighter-34)+button[type=button], input[onclick*=ajaxterm], .chooser_button+input, .form-control.ui_textbox+input, .table-hardcoded tbody tr td .submitter, select+input[type=button], .heighter-28:not(.ui_form_end_submit):not(.heighter-34-force), .heighter-28-force, .ui_form_end_submit.heighter-28-force, .ui_form_end_submit.heighter-28 {
+    font-size: 14px!important;
+    /* height: 2rem !important; */
+    max-height: unset !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px!important;
+}
+
+body[data-uri*="/mconfig.cgi"] form[action="mconfig.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered, body[data-uri*="/tconfig.cgi"] form[action="tconfig.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered, body[data-uri*="/uconfig.cgi"] form[action="uconfig.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered, body[data-uri*="/config.cgi"] form[action="config.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered {
+    text-overflow: initial;
+    padding-top: 2px !important;
+}
+
+body[layout-column="1"] #content .container-fluid [data-tbody-type=ui-table] * {
+    font-size: 0.9rem !important;
+}
+
+body[layout-column="1"] #content .container-fluid [data-table-type=ui-table] tr.bg-transparent>td .sub_table_container>[data-tbody-type=ui-table][data-table-cols="2"], body[layout-column="1"] #content .container-fluid [data-table-type=ui-table] tr.bg-transparent>td .sub_table_container>[data-tbody-type=ui-table]>[data-row-type=ui-table] .col_label, body[layout-column="1"] #content .container-fluid [data-table-type=ui-table] tr.bg-transparent>td .sub_table_container>[data-tbody-type=ui-table]>[data-row-type=ui-table] .col_value:not(.col_header):not(.opener_table_cell_style_small):not(.opener_table_cell_style_small_exclusion_border_top) {
+    margin-bottom: 0.5rem !important;
+}
+
+html[data-bgs=nightRider], html[data-bgs=nightRider] body, html[data-bgs=nightRider] .container:not(.form-signin-banner), html[data-bgs=nightRider] .container-fluid, html[data-bgs=nightRider] .container-fluid-loading, html[data-bgs=nightRider] .loader-container {
+    background-color: #0a0a0a !important;
+}
+
+html[data-bgs=nightRider] .container-fluid>.panel>.panel-body>pre, html[data-bgs=nightRider] .container-fluid>.panel>.panel-body>ul>pre, html[data-bgs=nightRider] #content .container-fluid>.panel>.panel-body .table-responsive>.table .sub_table_container td>pre, html[data-bgs=nightRider] #content [data-package-updates] pre, html[data-bgs=nightRider] pre:not(.CodeMirror-line):not([data-xconsole]), html[data-bgs=nightRider] .cm-s-monokai.CodeMirror, html[data-bgs=nightRider] body.server-manager[data-uri*="shell.cgi"] #content .sub_table_container:not(.xcontent-force-no-styling) *:not(.fa):not(.lawobject):not(b):not(.btn):not(span):not(input):not(.tdhead):not(th):not(td), html[data-bgs=nightRider] body.shell .sub_table_container:not(.xcontent-force-no-styling) #content *:not(.fa):not(.lawobject):not(b):not(.btn):not(span):not(input):not(.tdhead):not(th):not(pre):not(.comment) {
+    color: #dee0e5ee !important;
+    background-color: #131518 !important;
+}
+
+
+.sub_table_container pre, .CodeMirror *, .sub_table_container .CodeMirror * {
+    font-family: 'JetBrains Mono' !important;
+    font-size: 14px;
+}
+
+
+html[data-uri*="logviewer/view_log.cgi"] .container-fluid form+script+br+pre+pre .CodeMirror-lines, html[data-uri*="syslog/save_log.cgi"] .container-fluid form+script+br+pre+pre .CodeMirror-lines {
+    padding: 0.6rem !important;
+}
+
+.sub_table_container pre, .CodeMirror *, .sub_table_container .CodeMirror * {
+    font-family: 'JetBrains Mono';
+    font-size: 13px;
+}
+
+
+body[data-uri*="/mconfig.cgi"] form[action="mconfig.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered, body[data-uri*="/tconfig.cgi"] form[action="tconfig.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered, body[data-uri*="/uconfig.cgi"] form[action="uconfig.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered, body[data-uri*="/config.cgi"] form[action="config.cgi"]>.select2.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-top: 1px !important;
+}
+
+
+.col_label, .col_value, .table-subtable tbody tr td.no-border, .table-subtable tbody tr td.col_label, .table-subtable tbody tr td.col_value, .panel-body .table tbody, .panel-body table.table-hardcoded>tbody>tr>td, .panel-body form table, .table table table td {
+    padding: 0.3rem 0 0.3rem 0!important;
+}
+
+#content .table-hardcoded .ui_form_end_submit:not(.btn-tiny):not(.heighter-28):not(.heighter-28-force):not(.btn-xxs), #content .end_submits>.btn:not(.btn-tiny):not(.heighter-28):not(.heighter-28-force):not(.btn-xxs) {
+    padding: 1rem 0.3rem 1rem 0.2rem !important;
+}
+
+html[data-theme=gunmetal] #sidebar li:not(.sub-wrapper):not(.menu-container).sub_active {
+    border-left: 4px solid #4369e7;
+    padding: 0 0 0 1.45rem !important;
+}
+
+#sidebar ul.sub > li:not(.menu-container) {
+    padding: 0 0 0 1.45rem !important;
+}
+
+.right-side-tabs .right-side-tabs-dismiss i, .right-side-tabs .list-group>a.list-group-item div.media-body small span.authentic_update, .right-side-tabs .list-group>a.list-group-item div.media-body .fa-refresh, .right-side-tabs .list-group>a.list-group-item div.media-body>i {
+    font-size: 1rem !important;
+    margin-bottom: 0.2rem !important;
+}

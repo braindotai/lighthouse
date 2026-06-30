@@ -1,0 +1,50 @@
+name: uptime-kuma
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    container_name: uptime-kuma
+    volumes:
+      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "node", "extra/healthcheck.js"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: always
+    networks:
+      - uptime-kuma-external
+      - nextcloud-aio
+
+  autokuma:                                        # <-- indented under services
+    image: ghcr.io/bigboot/autokuma:latest
+    container_name: autokuma
+    depends_on:
+      uptime-kuma:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      AUTOKUMA__KUMA__URL: http://uptime-kuma:3001
+      AUTOKUMA__KUMA__USERNAME: ${UPTIMEKUMA_USERNAME}
+      AUTOKUMA__KUMA__PASSWORD: ${UPTIMEKUMA_PASSWORD}
+      AUTOKUMA__DOCKER__LABEL_PREFIX: kuma
+      AUTOKUMA__STATIC_MONITORS: /static-monitors
+      AUTOKUMA__DEFAULT_SETTINGS: |-
+        *.interval: 300
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/autokuma:/data
+      - ./data/autokuma/static-monitors:/static-monitors
+    networks:
+      - uptime-kuma-external
+      - nextcloud-aio
+
+networks:
+  uptime-kuma-external:
+    external: true
+  nextcloud-aio:
+    external: true

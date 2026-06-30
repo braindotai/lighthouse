@@ -1,0 +1,18 @@
+[Interface]
+# Key for Lighthouse
+# Bouncing = 0
+# NAT-PMP (Port Forwarding) = off
+# VPN Accelerator = on
+PrivateKey = 0Dtm52AJRXkzUv817cs+36t8ESBOk1W3wCKuTmLUoG0=
+Address = 10.2.0.2/32, 2a07:b944::2:2/128
+DNS = 10.2.0.1, 2a07:b944::2:1
+
+[Peer]
+# US-FREE#38
+PublicKey = SC3K+dUvwvU3yammLuEZ0YEVmRe+YwYvQHftqJA2fms=
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = 89.187.171.225:51820
+
+# Uncomment the following line (delete the # symbol) to connect to Proton VPN using IPv6.
+# Endpoint = [2a02:6ea0:c116::10]:51820
+PersistentKeepalive = 25

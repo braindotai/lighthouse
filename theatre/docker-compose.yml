@@ -1,0 +1,408 @@
+networks:
+  theatre_network:
+    name: theatre_network
+    ipam:
+      config:
+        - subnet: 172.39.0.0/24
+  uptime-kuma-external:
+    external: true
+
+services:
+
+  # ============================================================
+  # GLUETUN — VPN Container (kill switch + tunnel)
+  # All VPN-protected services route through this container.
+  # Ports for those services are mapped HERE, not on the services themselves.
+  # Docs: https://github.com/qdm12/gluetun-wiki
+  # ============================================================
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    networks:
+      theatre_network:
+        ipv4_address: ${IP_GLUETUN}
+      uptime-kuma-external: {}    # added — Uptime Kuma reaches VPN-proxied services through here
+    ports:
+      - 8181:8080     # qBittorrent WebUI
+      - 6881:6881     # qBittorrent torrenting port
+      - 6881:6881/udp
+      - 9696:9696     # Prowlarr
+      - 8191:8191     # FlareSolverr
+    volumes:
+      - ./data/services/gluetun:/gluetun
+    dns_search:
+      - "."
+    environment:
+      - HEALTH_SERVER_ADDRESS=:9999
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
+      - VPN_TYPE=${VPN_TYPE}
+      
+      # --- WireGuard credentials (most providers) ---
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
+       
+      # --- Server selection ---
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+      - VPN_PORT_FORWARDING=${VPN_PORT_FORWARDING}
+      - VPN_PORT_FORWARDING_STATUS_FILE=/gluetun/forwarded_port
+      
+      - TZ=${TZ}
+    healthcheck:
+      test: wget -qO /dev/null http://127.0.0.1:9999 || exit 1
+      interval: 20s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    labels:
+      # --- Group ---
+      kuma.theatre-group.group.name: "Theatre"
+      # --- Gluetun itself ---
+      kuma.gluetun_http.http.name: "Gluetun - VPN Health"
+      kuma.gluetun_http.http.url: "http://gluetun:9999"
+      kuma.gluetun_http.http.parent_name: "theatre-group"
+      kuma.gluetun_docker.docker.name: "Gluetun - Container"
+      kuma.gluetun_docker.docker.docker_container: "gluetun"
+      kuma.gluetun_docker.docker.docker_host: "1"
+      kuma.gluetun_docker.docker.parent_name: "theatre-group"
+      # --- qBittorrent HTTP (shares gluetun network namespace) ---
+      kuma.qbittorrent_http.http.name: "qBittorrent - HTTP"
+      kuma.qbittorrent_http.http.url: "http://gluetun:8080"
+      kuma.qbittorrent_http.http.parent_name: "theatre-group"
+      # --- Prowlarr TCP (shares gluetun network namespace, /ping requires auth) ---
+      kuma.prowlarr_tcp.port.name: "Prowlarr - TCP"
+      kuma.prowlarr_tcp.port.hostname: "gluetun"
+      kuma.prowlarr_tcp.port.port: "9696"
+      kuma.prowlarr_tcp.port.parent_name: "theatre-group"
+      # --- FlareSolverr HTTP (shares gluetun network namespace) ---
+      kuma.flaresolverr_http.http.name: "FlareSolverr - HTTP"
+      kuma.flaresolverr_http.http.url: "http://gluetun:8191/health"
+      kuma.flaresolverr_http.http.parent_name: "theatre-group"
+
+  # ============================================================
+  # QBITTORRENT — Torrent Client (runs through Gluetun VPN)
+  # ALL traffic goes through the VPN tunnel. No direct internet.
+  # ============================================================
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+        restart: true
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+      # - TORRENTING_PORT=${FIREWALL_VPN_INPUT_PORTS}
+    volumes:
+      - ./data/services/qbittorrent:/config
+      - ./data:/data
+    healthcheck:
+      test: wget -q --spider http://localhost:8080 || exit 1
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    labels:
+      deunhealth.restart.on.unhealthy: "true"
+      # Docker container monitor only — HTTP check is on gluetun
+      kuma.qbittorrent_docker.docker.name: "qBittorrent - Container"
+      kuma.qbittorrent_docker.docker.docker_container: "qbittorrent"
+      kuma.qbittorrent_docker.docker.docker_host: "1"
+      kuma.qbittorrent_docker.docker.parent_name: "theatre-group"
+
+
+  # ============================================================
+  # QBITTORRENT PORT SYNC (Automates ProtonVPN Dynamic Ports)
+  # ============================================================
+  qbittorrent-port-manager:
+    image: snoringdragon/gluetun-qbittorrent-port-manager:latest
+    container_name: qbittorrent-port-manager
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+      qbittorrent:
+        condition: service_started
+    environment:
+      - QBITTORRENT_SERVER=localhost
+      - QBITTORRENT_PORT=8080
+      # IMPORTANT: Change these to your actual qBittorrent WebUI login credentials
+      - QBITTORRENT_USER=${QBITTORRENT_USER}
+      - QBITTORRENT_PASS=${QBITTORRENT_PASS}
+      - PORT_FORWARDED=/gluetun/forwarded_port
+    volumes:
+      # Mounts the exact same folder so it can read the text file Gluetun creates
+      - ./data/services/gluetun:/gluetun
+    restart: unless-stopped
+    labels:
+      kuma.qbt_portmgr_docker.docker.name: "qBittorrent Port Manager - Container"
+      kuma.qbt_portmgr_docker.docker.docker_container: "qbittorrent-port-manager"
+      kuma.qbt_portmgr_docker.docker.docker_host: "1"
+      kuma.qbt_portmgr_docker.docker.parent_name: "theatre-group"
+
+
+  # ============================================================
+  # DEUNHEALTH — Auto-restarts unhealthy containers
+  # If qBittorrent loses VPN connection, this restarts it automatically.
+  # ============================================================
+  deunhealth:
+    image: qmcgaw/deunhealth
+    container_name: deunhealth
+    network_mode: none
+    environment:
+      - LOG_LEVEL=info
+      - HEALTH_SERVER_ADDRESS=127.0.0.1:9999
+      - TZ=${TZ}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    labels:
+      # Docker container monitor only — network_mode: none, no HTTP possible
+      kuma.deunhealth_docker.docker.name: "Deunhealth - Container"
+      kuma.deunhealth_docker.docker.docker_container: "deunhealth"
+      kuma.deunhealth_docker.docker.docker_host: "1"
+      kuma.deunhealth_docker.docker.parent_name: "theatre-group"
+
+  # ============================================================
+  # PROWLARR — Indexer Manager (runs through Gluetun VPN)
+  # Manages torrent/usenet indexers. Syncs to Radarr/Sonarr/Lidarr.
+  # ============================================================
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+        restart: true
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./data/services/prowlarr:/config
+    restart: unless-stopped
+    labels:
+      kuma.prowlarr_docker.docker.name: "Prowlarr - Container"
+      kuma.prowlarr_docker.docker.docker_container: "prowlarr"
+      kuma.prowlarr_docker.docker.docker_host: "1"
+      kuma.prowlarr_docker.docker.parent_name: "theatre-group"
+
+  # ============================================================
+  # FLARESOLVERR — Cloudflare Bypass (runs through Gluetun VPN)
+  # Some indexers use Cloudflare protection. This gets around it.
+  # ============================================================
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+        restart: true
+    environment:
+      - LOG_LEVEL=info
+      - TZ=${TZ}
+    restart: unless-stopped
+    labels:
+      kuma.flaresolverr_docker.docker.name: "FlareSolverr - Container"
+      kuma.flaresolverr_docker.docker.docker_container: "flaresolverr"
+      kuma.flaresolverr_docker.docker.docker_host: "1"
+      kuma.flaresolverr_docker.docker.parent_name: "theatre-group"
+
+  # ============================================================
+  # RADARR — Movie Manager (NOT behind VPN)
+  # Searches via Prowlarr, sends downloads to qBittorrent,
+  # renames and hard-links completed files to media folder.
+  # ============================================================
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./data/services/radarr:/config
+      - ./data:/data
+    ports:
+      - 7878:7878
+    networks:
+      theatre_network:
+        ipv4_address: ${IP_RADARR}
+      uptime-kuma-external: {}
+    restart: unless-stopped
+    labels:
+      kuma.radarr_tcp.port.name: "Radarr - TCP"
+      kuma.radarr_tcp.port.hostname: "radarr"
+      kuma.radarr_tcp.port.port: "7878"
+      kuma.radarr_tcp.port.parent_name: "theatre-group"
+      kuma.radarr_docker.docker.name: "Radarr - Container"
+      kuma.radarr_docker.docker.docker_container: "radarr"
+      kuma.radarr_docker.docker.docker_host: "1"
+      kuma.radarr_docker.docker.parent_name: "theatre-group"
+
+  # ============================================================
+  # SONARR — TV Show Manager (NOT behind VPN)
+  # Same pattern as Radarr but for TV series.
+  # ============================================================
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./data/services/sonarr:/config
+      - ./data:/data
+    ports:
+      - 8989:8989
+    networks:
+      theatre_network:
+        ipv4_address: ${IP_SONARR}
+      uptime-kuma-external: {}
+    restart: unless-stopped
+    labels:
+      kuma.sonarr_tcp.port.name: "Sonarr - TCP"
+      kuma.sonarr_tcp.port.hostname: "sonarr"
+      kuma.sonarr_tcp.port.port: "8989"
+      kuma.sonarr_tcp.port.parent_name: "theatre-group"
+      kuma.sonarr_docker.docker.name: "Sonarr - Container"
+      kuma.sonarr_docker.docker.docker_container: "sonarr"
+      kuma.sonarr_docker.docker.docker_host: "1"
+      kuma.sonarr_docker.docker.parent_name: "theatre-group"
+
+
+  # ============================================================
+  # BAZARR — Subtitle Manager (NOT behind VPN)
+  # Automatically downloads subtitles for movies and TV shows.
+  # ============================================================
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./data/services/bazarr:/config
+      - ./data:/data
+    ports:
+      - 6767:6767
+    networks:
+      theatre_network:
+        ipv4_address: ${IP_BAZARR}
+      uptime-kuma-external: {}
+    restart: unless-stopped
+    labels:
+      kuma.bazarr_tcp.port.name: "Bazarr - TCP"
+      kuma.bazarr_tcp.port.hostname: "bazarr"
+      kuma.bazarr_tcp.port.port: "6767"
+      kuma.bazarr_tcp.port.parent_name: "theatre-group"
+      kuma.bazarr_docker.docker.name: "Bazarr - Container"
+      kuma.bazarr_docker.docker.docker_container: "bazarr"
+      kuma.bazarr_docker.docker.docker_host: "1"
+      kuma.bazarr_docker.docker.parent_name: "theatre-group"
+
+  # ============================================================
+  # JELLYFIN — Media Server (NOT behind VPN)
+  # Your personal streaming service. Plays movies, TV, music.
+  # Needs full bandwidth — never put this behind the VPN.
+  # ============================================================
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    privileged: true
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./data/services/jellyfin:/config
+      - ./data/media:/data/media
+    ports:
+      - 8096:8096
+    # Uncomment the lines below to enable hardware transcoding (Intel Quick Sync / VAAPI).
+    # Only works if your system has Intel/AMD integrated graphics (/dev/dri must exist).
+    # If you get an error about /dev/dri not found, leave these commented out.
+    devices:
+      - /dev/dri:/dev/dri
+    networks:
+      theatre_network:
+        ipv4_address: ${IP_JELLYFIN}
+      uptime-kuma-external: {}
+    restart: unless-stopped
+    labels:
+      kuma.jellyfin_http.http.name: "Jellyfin - HTTP"
+      kuma.jellyfin_http.http.url: "http://jellyfin:8096/health"
+      kuma.jellyfin_http.http.parent_name: "theatre-group"
+      kuma.jellyfin_docker.docker.name: "Jellyfin - Container"
+      kuma.jellyfin_docker.docker.docker_container: "jellyfin"
+      kuma.jellyfin_docker.docker.docker_host: "1"
+      kuma.jellyfin_docker.docker.parent_name: "theatre-group"
+
+  # ============================================================
+  # SEERR — Request System (NOT behind VPN)
+  # Netflix-like UI for requesting movies and TV shows.
+  # Share this with family — they never need to touch Radarr.
+  #
+  # Seerr is the unified successor to Overseerr and Jellyseerr
+  # (merged under seerr-team). Supports Plex, Jellyfin, and Emby.
+  #
+  # Config uses a NAMED Docker volume (not a bind mount). This is
+  # required: Seerr runs as the `node` user (UID 1000) and a
+  # bind-mounted host folder is created root-owned, causing a
+  # permission-denied crash loop. On Windows/WSL, bind mounts also
+  # corrupt the SQLite DB over SMB. Named volumes fix both cases
+  # (matches upstream Seerr docs).
+  #
+  # Migrating from ./jellyseerr or ./seerr bind mount? See README
+  # troubleshooting "Migrating Seerr config to a named volume".
+  # ============================================================
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=${TZ}
+      - PORT=5055
+    volumes:
+      - ./data/services/seerr:/app/config
+    ports:
+      - 5055:5055
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    networks:
+      theatre_network:
+        ipv4_address: ${IP_SEERR}
+      uptime-kuma-external: {}
+    restart: unless-stopped
+    labels:
+      kuma.seerr_http.http.name: "Seerr - HTTP"
+      kuma.seerr_http.http.url: "http://seerr:5055/api/v1/settings/public"
+      kuma.seerr_http.http.parent_name: "theatre-group"
+      kuma.seerr_docker.docker.name: "Seerr - Container"
+      kuma.seerr_docker.docker.docker_container: "seerr"
+      kuma.seerr_docker.docker.docker_host: "1"
+      kuma.seerr_docker.docker.parent_name: "theatre-group"

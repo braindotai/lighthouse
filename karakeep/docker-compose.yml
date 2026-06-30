@@ -1,0 +1,77 @@
+name: karakeep
+
+services:
+  karakeep:
+    image: ghcr.io/karakeep-app/karakeep:${KARAKEEP_VERSION:-release}
+    container_name: karakeep
+    restart: unless-stopped
+    volumes:
+      # By default, the data is stored in a docker volume called "data".
+      # If you want to mount a custom directory, change the volume mapping to:
+      - ./data:/data
+    ports:
+      - 3030:3000
+    env_file:
+      - .env
+    environment:
+      MEILI_ADDR: http://meilisearch:7700
+      BROWSER_WEB_URL: http://chrome:9222
+      DATA_DIR: /data # DON'T CHANGE THIS
+    networks:
+      - default
+      - uptime-kuma-external
+    labels:
+      kuma.karakeep-group.group.name: "Karakeep"
+      kuma.karakeep_http.http.name: "Karakeep - HTTP"
+      kuma.karakeep_http.http.url: "http://karakeep:3000/api/health"
+      kuma.karakeep_http.http.parent_name: "karakeep-group"
+      kuma.karakeep_docker.docker.name: "Karakeep - Container"
+      kuma.karakeep_docker.docker.docker_container: "karakeep"
+      kuma.karakeep_docker.docker.docker_host: "1"
+      kuma.karakeep_docker.docker.parent_name: "karakeep-group"
+
+  chrome:
+    image: gcr.io/zenika-hub/alpine-chrome:124
+    container_name: karakeep_chrome
+    restart: unless-stopped
+    command:
+      - --no-sandbox
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --remote-debugging-address=0.0.0.0
+      - --remote-debugging-port=9222
+      - --hide-scrollbars
+    # No network needed — only karakeep_server talks to chrome internally
+    labels:
+      kuma.karakeep_chrome_docker.docker.name: "Karakeep Chrome - Container"
+      kuma.karakeep_chrome_docker.docker.docker_container: "karakeep_chrome"
+      kuma.karakeep_chrome_docker.docker.docker_host: "1"
+      kuma.karakeep_chrome_docker.docker.parent_name: "karakeep-group"
+  
+  meilisearch:
+    image: getmeili/meilisearch:v1.41.0
+    container_name: karakeep_search
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - ./data/meilisearch:/meili_data
+    networks:
+      - default
+      - uptime-kuma-external
+    labels:
+      kuma.karakeep_search_http.http.name: "Karakeep Meilisearch - HTTP"
+      kuma.karakeep_search_http.http.url: "http://karakeep_search:7700/health"
+      kuma.karakeep_search_http.http.accepted_statuscodes: '["200-299"]'
+      kuma.karakeep_search_http.http.parent_name: "karakeep-group"
+      kuma.karakeep_search_docker.docker.name: "Karakeep Meilisearch - Container"
+      kuma.karakeep_search_docker.docker.docker_container: "karakeep_search"
+      kuma.karakeep_search_docker.docker.docker_host: "1"
+      kuma.karakeep_search_docker.docker.parent_name: "karakeep-group"
+
+networks:
+  default:
+  uptime-kuma-external:
+    external: true
