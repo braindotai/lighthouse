@@ -4,8 +4,6 @@ Lighthouse is a modular, Docker-compose based self-hosted home server infrastruc
 
 The architecture isolates each service stack in its own directory, using a centralized Makefile for orchestrating single-stack, fleet-wide operations, and remote volume restoration.
 
----
-
 ## Application Directory
 
 ### Administration & Monitoring
@@ -19,7 +17,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Lightweight host resource monitoring hub and agent.
       <br>
       <small><code>beszel</code>, <code>beszel-agent</code></small>
-      <br>
+      <br><br>
     </td>
     <td width="50%" valign="top">
       <strong>Dockhand</strong><br>
@@ -28,7 +26,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Direct Docker socket web management interface dashboard.
       <br>
       <small><code>dockhand</code></small>
-      <br>
+      <br><br>
     </td>
   </tr>
   <tr>
@@ -39,7 +37,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Service monitoring dashboard with AutoKuma integration.
       <br>
       <small><code>uptime-kuma</code>, <code>autokuma</code></small>
-      <br>
+      <br><br>
     </td>
     <td width="50%" valign="top">
       <strong>Webmin</strong><br>
@@ -48,7 +46,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Theme overrides and custom stylesheets for Webmin.
       <br>
       <small>Custom <code>style.css</code> theme</small>
-      <br>
+      <br><br>
     </td>
   </tr>
 </table>
@@ -64,7 +62,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Private cloud storage, file sync, and collaboration suite.
       <br>
       <small><code>all-in-one</code> (AIO)</small>
-      <br>
+      <br><br>
     </td>
     <td width="50%" valign="top">
       <strong>AFFiNE</strong><br>
@@ -73,7 +71,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Collaborative workspace, canvas, and knowledge base.
       <br>
       <small><code>affine-stable</code>, <code>redis</code>, <code>pgvector</code></small>
-      <br>
+      <br><br>
     </td>
   </tr>
   <tr>
@@ -84,7 +82,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Web-based PDF viewing, merging, and conversion utility.
       <br>
       <small><code>bentopdf-simple</code></small>
-      <br>
+      <br><br>
     </td>
   </tr>
 </table>
@@ -100,7 +98,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Lightweight Bitwarden-compatible credentials backend.
       <br>
       <small><code>vaultwarden/server</code></small>
-      <br>
+      <br><br>
     </td>
     <td width="50%" valign="top">
       <strong>Hemmelig</strong><br>
@@ -109,7 +107,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Client-side encrypted notes and password sharing.
       <br>
       <small><code>hemmelig:v7</code></small>
-      <br>
+      <br><br>
     </td>
   </tr>
   <tr>
@@ -120,7 +118,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Full-text bookmark archiver and snapshot manager.
       <br>
       <small><code>karakeep</code>, <code>alpine-chrome</code>, <code>meilisearch</code></small>
-      <br>
+      <br><br>
     </td>
     <td width="50%" valign="top">
       <strong>Mazanoke</strong><br>
@@ -129,7 +127,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Client-side, privacy-focused image optimizer.
       <br>
       <small><code>mazanoke</code></small>
-      <br>
+      <br><br>
     </td>
   </tr>
 </table>
@@ -145,7 +143,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Automated home media acquisition and streaming stack.
       <br>
       <small>Jellyfin, Seerr, Radarr, Sonarr, Bazarr, Prowlarr, qBittorrent, Gluetun</small>
-      <br>
+      <br><br>
     </td>
     <td width="50%" valign="top">
       <strong>Immich</strong><br>
@@ -154,7 +152,7 @@ The architecture isolates each service stack in its own directory, using a centr
       High-performance self-hosted photo/video backup system.
       <br>
       <small><code>immich-server</code>, <code>immich-machine-learning</code>, <code>valkey</code>, <code>pgvecto-rs</code></small>
-      <br>
+      <br><br>
     </td>
   </tr>
 </table>
@@ -170,7 +168,7 @@ The architecture isolates each service stack in its own directory, using a centr
       Encrypted remote backups to Backblaze B2 using Restic.
       <br>
       <small><code>restic-backup-docker</code></small>
-      <br>
+      <br><br>
     </td>
   </tr>
 </table>
