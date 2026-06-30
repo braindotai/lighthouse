@@ -11,7 +11,7 @@ The architecture isolates each service stack in its own directory, using a centr
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>Beszel</strong><br>
+      <br><strong>Beszel</strong><br>
       <a href="./beszel"><code>./beszel</code></a> &bull; Port <code>8090</code>
       <br>
       Lightweight host resource monitoring hub and agent.
@@ -20,7 +20,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
     </td>
     <td width="50%" valign="top">
-      <strong>Dockhand</strong><br>
+      <br><strong>Dockhand</strong><br>
       <a href="./dockhand"><code>./dockhand</code></a> &bull; Port <code>7070</code>
       <br>
       Direct Docker socket web management interface dashboard.
@@ -31,7 +31,7 @@ The architecture isolates each service stack in its own directory, using a centr
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <strong>Uptime Kuma</strong><br>
+      <br><strong>Uptime Kuma</strong><br>
       <a href="./uptimekuma"><code>./uptimekuma</code></a> &bull; Port <code>3001</code>
       <br>
       Service monitoring dashboard with AutoKuma integration.
@@ -40,7 +40,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
     </td>
     <td width="50%" valign="top">
-      <strong>Webmin</strong><br>
+      <br><strong>Webmin</strong><br>
       <a href="./webmin"><code>./webmin</code></a> &bull; <em>Host-level</em>
       <br>
       Theme overrides and custom stylesheets for Webmin.
@@ -56,7 +56,7 @@ The architecture isolates each service stack in its own directory, using a centr
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>Nextcloud</strong><br>
+      <br><strong>Nextcloud</strong><br>
       <a href="./nextcloud"><code>./nextcloud</code></a> &bull; Port <code>8080</code>
       <br>
       Private cloud storage, file sync, and collaboration suite.
@@ -65,7 +65,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
     </td>
     <td width="50%" valign="top">
-      <strong>AFFiNE</strong><br>
+      <br><strong>AFFiNE</strong><br>
       <a href="./affine"><code>./affine</code></a> &bull; Port <code>3010</code>
       <br>
       Collaborative workspace, canvas, and knowledge base.
@@ -76,7 +76,7 @@ The architecture isolates each service stack in its own directory, using a centr
   </tr>
   <tr>
     <td colspan="2" valign="top">
-      <strong>BentoPDF</strong><br>
+      <br><strong>BentoPDF</strong><br>
       <a href="./bentopdf"><code>./bentopdf</code></a> &bull; Port <code>3090</code>
       <br>
       Web-based PDF viewing, merging, and conversion utility.
@@ -92,7 +92,7 @@ The architecture isolates each service stack in its own directory, using a centr
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>Vaultwarden</strong><br>
+      <br><strong>Vaultwarden</strong><br>
       <a href="./vaultwarden"><code>./vaultwarden</code></a> &bull; Port <code>8070</code>
       <br>
       Lightweight Bitwarden-compatible credentials backend.
@@ -101,7 +101,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
     </td>
     <td width="50%" valign="top">
-      <strong>Hemmelig</strong><br>
+      <br><strong>Hemmelig</strong><br>
       <a href="./hemmelig"><code>./hemmelig</code></a> &bull; Port <code>3050</code>
       <br>
       Client-side encrypted notes and password sharing.
@@ -112,7 +112,7 @@ The architecture isolates each service stack in its own directory, using a centr
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <strong>Karakeep</strong><br>
+      <br><strong>Karakeep</strong><br>
       <a href="./karakeep"><code>./karakeep</code></a> &bull; Port <code>3030</code>
       <br>
       Full-text bookmark archiver and snapshot manager.
@@ -121,7 +121,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
     </td>
     <td width="50%" valign="top">
-      <strong>Mazanoke</strong><br>
+      <br><strong>Mazanoke</strong><br>
       <a href="./mazanoke"><code>./mazanoke</code></a> &bull; Port <code>3474</code>
       <br>
       Client-side, privacy-focused image optimizer.
@@ -137,7 +137,7 @@ The architecture isolates each service stack in its own directory, using a centr
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>Theatre</strong><br>
+      <br><strong>Theatre</strong><br>
       <a href="./theatre"><code>./theatre</code></a> &bull; <em>Multi-port</em>
       <br>
       Automated home media acquisition and streaming stack.
@@ -146,7 +146,7 @@ The architecture isolates each service stack in its own directory, using a centr
       <br><br>
     </td>
     <td width="50%" valign="top">
-      <strong>Immich</strong><br>
+      <br><strong>Immich</strong><br>
       <a href="./immich"><code>./immich</code></a> &bull; Port <code>2283</code>
       <br>
       High-performance self-hosted photo/video backup system.
@@ -162,7 +162,7 @@ The architecture isolates each service stack in its own directory, using a centr
 <table>
   <tr>
     <td width="100%" valign="top">
-      <strong>Backblaze</strong><br>
+      <br><strong>Backblaze</strong><br>
       <a href="./backblaze"><code>./backblaze</code></a> &bull; <em>Backup</em>
       <br>
       Encrypted remote backups to Backblaze B2 using Restic.
